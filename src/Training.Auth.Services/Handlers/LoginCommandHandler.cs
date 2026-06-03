@@ -1,9 +1,8 @@
 using MediatR;
-using Training.Auth.Services.Common;
-using Training.Auth.Services.Users.DTOs;
 using Training.Auth.Domain.Repositories;
+using Training.Auth.Domain.Services;
 
-namespace Training.Auth.Services.Users.Commands;
+namespace Training.Auth.Services.Handlers;
 
 public class LoginCommandHandler(
     IUserRepository userRepository,

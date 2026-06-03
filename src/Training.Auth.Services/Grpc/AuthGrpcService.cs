@@ -1,30 +1,44 @@
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
-using Training.Auth.Services.Users.Commands;
-using Training.Auth.Services.Users.Queries;
+using Training.Auth.Services.Handlers;
 using static Training.Auth.AuthService;
 
-namespace Training.Auth.Services;
+namespace Training.Auth.Services.Grpc;
 
 public class AuthGrpcService(IMediator mediator) : AuthServiceBase
 {
-    public override async Task<AuthResponse> Register(RegisterRequest request, ServerCallContext context)
+    public override async Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
     {
         var result = await mediator.Send(
             new RegisterCommand(request.Email, request.Password, request.Name),
             context.CancellationToken);
 
-        return ToAuthResponse(result);
+        return new RegisterResponse
+        {
+            AccessToken = result.AccessToken,
+            RefreshToken = result.RefreshToken,
+            UserId = result.UserId,
+            Email = result.Email,
+            Name = result.Name,
+            ExpiresAt = result.ExpiresAt
+        };
     }
 
-    public override async Task<AuthResponse> Login(LoginRequest request, ServerCallContext context)
+    public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
     {
         var result = await mediator.Send(
             new LoginCommand(request.Email, request.Password),
             context.CancellationToken);
 
-        return ToAuthResponse(result);
+        return new LoginResponse
+        {
+            AccessToken = result.AccessToken,
+            RefreshToken = result.RefreshToken,
+            UserId = result.UserId,
+            Email = result.Email,
+            Name = result.Name,
+            ExpiresAt = result.ExpiresAt
+        };
     }
 
     public override async Task<ValidateTokenResponse> ValidateToken(ValidateTokenRequest request, ServerCallContext context)
@@ -42,24 +56,13 @@ public class AuthGrpcService(IMediator mediator) : AuthServiceBase
         };
     }
 
-    public override async Task<AuthResponse> RefreshToken(RefreshTokenRequest request, ServerCallContext context)
+    public override async Task<RefreshTokenResponse> RefreshToken(RefreshTokenRequest request, ServerCallContext context)
     {
         var result = await mediator.Send(
             new RefreshTokenCommand(request.RefreshToken),
             context.CancellationToken);
 
-        return ToAuthResponse(result);
-    }
-
-    public override async Task<Empty> Logout(Training.Common.IdRequest request, ServerCallContext context)
-    {
-        await mediator.Send(new LogoutCommand(request.Id), context.CancellationToken);
-        return new Empty();
-    }
-
-    private static AuthResponse ToAuthResponse(Training.Auth.Services.Users.DTOs.AuthResult result)
-    {
-        return new AuthResponse
+        return new RefreshTokenResponse
         {
             AccessToken = result.AccessToken,
             RefreshToken = result.RefreshToken,
@@ -68,5 +71,11 @@ public class AuthGrpcService(IMediator mediator) : AuthServiceBase
             Name = result.Name,
             ExpiresAt = result.ExpiresAt
         };
+    }
+
+    public override async Task<LogoutResponse> Logout(LogoutRequest request, ServerCallContext context)
+    {
+        await mediator.Send(new LogoutCommand(request.UserId), context.CancellationToken);
+        return new LogoutResponse();
     }
 }

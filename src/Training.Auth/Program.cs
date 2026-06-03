@@ -1,5 +1,6 @@
 using Training.Auth.Infrastructure;
 using Training.Auth.Services;
+using Training.Auth.Services.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 

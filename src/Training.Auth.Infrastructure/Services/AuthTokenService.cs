@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Training.Auth.Services.Common;
+using Training.Auth.Domain.Services;
 
 namespace Training.Auth.Infrastructure.Services;
 

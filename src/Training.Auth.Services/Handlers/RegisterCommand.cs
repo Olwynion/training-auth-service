@@ -1,6 +1,5 @@
 using MediatR;
-using Training.Auth.Services.Users.DTOs;
 
-namespace Training.Auth.Services.Users.Commands;
+namespace Training.Auth.Services.Handlers;
 
 public record RegisterCommand(string Email, string Password, string Name) : IRequest<AuthResult>;

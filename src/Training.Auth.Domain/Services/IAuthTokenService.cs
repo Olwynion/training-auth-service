@@ -1,4 +1,4 @@
-namespace Training.Auth.Services.Common;
+namespace Training.Auth.Domain.Services;
 
 public interface IAuthTokenService
 {

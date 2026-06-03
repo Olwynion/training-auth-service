@@ -1,4 +1,4 @@
-using Training.Auth.Services.Common;
+using Training.Auth.Domain.Services;
 
 namespace Training.Auth.Infrastructure.Services;
 

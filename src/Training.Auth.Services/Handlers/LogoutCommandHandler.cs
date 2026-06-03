@@ -2,7 +2,7 @@ using MediatR;
 using Training.Auth.Domain.Repositories;
 using Training.Auth.Domain.ValueObjects;
 
-namespace Training.Auth.Services.Users.Commands;
+namespace Training.Auth.Services.Handlers;
 
 public class LogoutCommandHandler(IUserRepository userRepository) : IRequestHandler<LogoutCommand>
 {

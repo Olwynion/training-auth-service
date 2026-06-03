@@ -1,10 +1,10 @@
 using Moq;
 using Training.Auth.Domain.Entities;
 using Training.Auth.Domain.Repositories;
-using Training.Auth.Services.Common;
-using Training.Auth.Services.Users.Commands;
+using Training.Auth.Domain.Services;
+using Training.Auth.Services.Handlers;
 
-namespace Training.Auth.Services.Tests;
+namespace Training.Auth.Tests.Handlers;
 
 public class LoginCommandHandlerTests
 {

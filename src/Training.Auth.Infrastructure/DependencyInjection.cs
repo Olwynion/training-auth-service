@@ -1,8 +1,8 @@
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Training.Auth.Services.Common;
 using Training.Auth.Domain.Repositories;
+using Training.Auth.Domain.Services;
 using Training.Auth.Infrastructure.Mappings;
 using Training.Auth.Infrastructure.Repositories;
 using Training.Auth.Infrastructure.Services;

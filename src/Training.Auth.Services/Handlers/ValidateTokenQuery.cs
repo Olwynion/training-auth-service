@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Training.Auth.Services.Users.Queries;
+namespace Training.Auth.Services.Handlers;
 
 public record ValidateTokenQuery(string AccessToken) : IRequest<TokenValidationResult>;
 

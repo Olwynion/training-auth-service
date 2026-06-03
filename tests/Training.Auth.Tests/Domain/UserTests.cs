@@ -1,7 +1,7 @@
 using Training.Auth.Domain.Entities;
 using Training.Auth.Domain.ValueObjects;
 
-namespace Training.Auth.Domain.Tests;
+namespace Training.Auth.Tests.Domain;
 
 public class UserTests
 {

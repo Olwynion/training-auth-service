@@ -1,7 +1,7 @@
 using MediatR;
-using Training.Auth.Services.Common;
+using Training.Auth.Domain.Services;
 
-namespace Training.Auth.Services.Users.Queries;
+namespace Training.Auth.Services.Handlers;
 
 public class ValidateTokenQueryHandler(IAuthTokenService tokenService)
     : IRequestHandler<ValidateTokenQuery, TokenValidationResult>

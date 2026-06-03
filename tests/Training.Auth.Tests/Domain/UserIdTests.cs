@@ -1,6 +1,6 @@
 using Training.Auth.Domain.ValueObjects;
 
-namespace Training.Auth.Domain.Tests;
+namespace Training.Auth.Tests.Domain;
 
 public class UserIdTests
 {

@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace Training.Auth.Services.Users.Commands;
+namespace Training.Auth.Services.Handlers;
 
 public record LogoutCommand(string UserId) : IRequest;

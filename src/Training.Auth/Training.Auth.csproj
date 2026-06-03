@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\..\proto\contracts\proto\auth\auth.proto" GrpcServices="Server" Link="protos\auth.proto" ProtoRoot="..\..\proto\contracts\proto\" />
-    <Protobuf Include="..\..\proto\contracts\proto\common\common.proto" GrpcServices="Server" Link="protos\common.proto" ProtoRoot="..\..\proto\contracts\proto\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.80.0" />
   </ItemGroup>
 

@@ -22,6 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Training.Auth.Domain\Training.Auth.Domain.csproj" />
     <ProjectReference Include="..\..\src\Training.Auth.Services\Training.Auth.Services.csproj" />
+    <ProjectReference Include="..\..\src\Training.Auth.Infrastructure\Training.Auth.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Training.Auth\Training.Auth.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using Training.Auth.Domain.Entities;
 using Training.Auth.Domain.Repositories;
 using Training.Auth.Domain.Services;
 
-namespace Training.Auth.Services.Handlers;
+namespace Training.Auth.Handlers;
 
 public class RegisterCommandHandler(
     IUserRepository userRepository,

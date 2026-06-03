@@ -1,11 +1,11 @@
 using Grpc.Core;
 using MediatR;
-using Training.Auth.Services.Handlers;
-using static Training.Auth.AuthService;
+using Training.Auth;
+using Training.Auth.Handlers;
 
-namespace Training.Auth.Services.Grpc;
+namespace Training.Auth.Grpc;
 
-public class AuthGrpcService(IMediator mediator) : AuthServiceBase
+public class AuthGrpcService(IMediator mediator) : AuthService.AuthServiceBase
 {
     public override async Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
     {

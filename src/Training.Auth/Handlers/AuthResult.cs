@@ -1,4 +1,4 @@
-namespace Training.Auth.Services.Handlers;
+namespace Training.Auth.Handlers;
 
 public record AuthResult(
     string AccessToken,

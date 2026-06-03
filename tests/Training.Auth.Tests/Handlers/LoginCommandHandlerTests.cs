@@ -2,7 +2,7 @@ using Moq;
 using Training.Auth.Domain.Entities;
 using Training.Auth.Domain.Repositories;
 using Training.Auth.Domain.Services;
-using Training.Auth.Services.Handlers;
+using Training.Auth.Handlers;
 
 namespace Training.Auth.Tests.Handlers;
 

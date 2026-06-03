@@ -2,7 +2,7 @@ using MediatR;
 using Training.Auth.Domain.Repositories;
 using Training.Auth.Domain.Services;
 
-namespace Training.Auth.Services.Handlers;
+namespace Training.Auth.Handlers;
 
 public class LoginCommandHandler(
     IUserRepository userRepository,

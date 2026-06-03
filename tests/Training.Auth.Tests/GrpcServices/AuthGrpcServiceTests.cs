@@ -21,7 +21,7 @@ public class AuthGrpcServiceTests
     public async Task Register_ShouldSendRegisterCommand()
     {
         _mediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new AuthResult("at", "rt", "uid", "e@m.com", "n", 12345L));
+            .ReturnsAsync(new AuthResult("at", "rt", 99, "e@m.com", "n", 12345L));
 
         var response = await _service.Register(new RegisterRequest
         {
@@ -31,14 +31,14 @@ public class AuthGrpcServiceTests
         }, Mock.Of<ServerCallContext>());
 
         Assert.Equal("at", response.AccessToken);
-        Assert.Equal("uid", response.UserId);
+        Assert.Equal(99, response.UserId);
     }
 
     [Fact]
     public async Task Login_ShouldSendLoginCommand()
     {
         _mediator.Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new AuthResult("at", "rt", "uid", "e@m.com", "n", 12345L));
+            .ReturnsAsync(new AuthResult("at", "rt", 99, "e@m.com", "n", 12345L));
 
         var response = await _service.Login(new LoginRequest
         {
@@ -53,7 +53,7 @@ public class AuthGrpcServiceTests
     public async Task ValidateToken_ShouldReturnValidationResult()
     {
         _mediator.Setup(m => m.Send(It.IsAny<ValidateTokenQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new TokenValidationResult(true, false, "uid", "e@m.com"));
+            .ReturnsAsync(new TokenValidationResult(true, false, 99, "e@m.com"));
 
         var response = await _service.ValidateToken(new ValidateTokenRequest
         {
@@ -61,14 +61,14 @@ public class AuthGrpcServiceTests
         }, Mock.Of<ServerCallContext>());
 
         Assert.True(response.IsValid);
-        Assert.Equal("uid", response.UserId);
+        Assert.Equal(99, response.UserId);
     }
 
     [Fact]
     public async Task RefreshToken_ShouldSendRefreshTokenCommand()
     {
         _mediator.Setup(m => m.Send(It.IsAny<RefreshTokenCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new AuthResult("new-at", "new-rt", "uid", "e@m.com", "n", 12345L));
+            .ReturnsAsync(new AuthResult("new-at", "new-rt", 99, "e@m.com", "n", 12345L));
 
         var response = await _service.RefreshToken(new RefreshTokenRequest
         {
@@ -87,7 +87,7 @@ public class AuthGrpcServiceTests
 
         var response = await _service.Logout(new LogoutRequest
         {
-            UserId = "uid"
+            UserId = 99
         }, Mock.Of<ServerCallContext>());
 
         Assert.NotNull(response);

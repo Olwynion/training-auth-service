@@ -22,7 +22,7 @@ public class LoginCommandHandlerTests
         _handler = new LoginCommandHandler(
             _userRepo.Object, _tokenService.Object, _passwordHasher.Object);
 
-        _tokenService.Setup(t => t.GenerateAccessToken(It.IsAny<string>(), It.IsAny<string>()))
+        _tokenService.Setup(t => t.GenerateAccessToken(It.IsAny<long>(), It.IsAny<string>()))
             .Returns(("access-token", DateTime.UtcNow.AddHours(1)));
         _tokenService.Setup(t => t.GenerateRefreshToken())
             .Returns(("refresh-token", DateTime.UtcNow.AddDays(7)));

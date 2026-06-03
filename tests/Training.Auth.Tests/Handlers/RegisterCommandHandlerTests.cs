@@ -23,7 +23,7 @@ public class RegisterCommandHandlerTests
             _userRepo.Object, _tokenService.Object, _passwordHasher.Object);
 
         _passwordHasher.Setup(p => p.Hash(It.IsAny<string>())).Returns("hashed-password");
-        _tokenService.Setup(t => t.GenerateAccessToken(It.IsAny<string>(), It.IsAny<string>()))
+        _tokenService.Setup(t => t.GenerateAccessToken(It.IsAny<long>(), It.IsAny<string>()))
             .Returns(("access-token", DateTime.UtcNow.AddHours(1)));
         _tokenService.Setup(t => t.GenerateRefreshToken())
             .Returns(("refresh-token", DateTime.UtcNow.AddDays(7)));
@@ -34,6 +34,8 @@ public class RegisterCommandHandlerTests
     {
         _userRepo.Setup(r => r.GetByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
+        _userRepo.Setup(r => r.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1L);
 
         var result = await _handler.Handle(
             new RegisterCommand("new@test.com", "pass123", "New User"),
@@ -42,6 +44,7 @@ public class RegisterCommandHandlerTests
         Assert.NotNull(result);
         Assert.Equal("access-token", result.AccessToken);
         Assert.Equal("refresh-token", result.RefreshToken);
+        Assert.Equal(1, result.UserId);
         Assert.Equal("new@test.com", result.Email);
         Assert.Equal("New User", result.Name);
     }

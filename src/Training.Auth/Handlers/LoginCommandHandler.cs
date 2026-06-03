@@ -15,8 +15,7 @@ public class LoginCommandHandler(
         if (user == null || !passwordHasher.Verify(request.Password, user.PasswordHash))
             throw new UnauthorizedAccessException("Invalid email or password");
 
-        var (accessToken, expiresAt) = tokenService.GenerateAccessToken(
-            user.Id.Value.ToString(), user.Email);
+        var (accessToken, expiresAt) = tokenService.GenerateAccessToken(user.Id, user.Email);
         var (refreshToken, _) = tokenService.GenerateRefreshToken();
 
         user.SetRefreshToken(refreshToken, expiresAt);
@@ -24,7 +23,7 @@ public class LoginCommandHandler(
 
         return new AuthResult(
             accessToken, refreshToken,
-            user.Id.Value.ToString(), user.Email, user.Name,
+            user.Id, user.Email, user.Name,
             ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
     }
 }

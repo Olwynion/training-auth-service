@@ -19,17 +19,18 @@ public class RegisterCommandHandler(
         var passwordHash = passwordHasher.Hash(request.Password);
         var user = User.Create(request.Email, passwordHash, request.Name);
 
-        var (accessToken, expiresAt) = tokenService.GenerateAccessToken(
-            user.Id.Value.ToString(), user.Email);
+        var userId = await userRepository.AddAsync(user, cancellationToken);
+        user.SetId(userId);
+
+        var (accessToken, expiresAt) = tokenService.GenerateAccessToken(userId, user.Email);
         var (refreshToken, _) = tokenService.GenerateRefreshToken();
 
         user.SetRefreshToken(refreshToken, expiresAt);
-
-        await userRepository.AddAsync(user, cancellationToken);
+        userRepository.Update(user);
 
         return new AuthResult(
             accessToken, refreshToken,
-            user.Id.Value.ToString(), user.Email, user.Name,
+            userId, user.Email, user.Name,
             ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
     }
 }

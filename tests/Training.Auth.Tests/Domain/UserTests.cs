@@ -1,5 +1,4 @@
 using Training.Auth.Domain.Entities;
-using Training.Auth.Domain.ValueObjects;
 
 namespace Training.Auth.Tests.Domain;
 
@@ -10,7 +9,7 @@ public class UserTests
     {
         var user = User.Create("test@example.com", "hash123", "Test User");
 
-        Assert.NotNull(user.Id);
+        Assert.Equal(0, user.Id);
         Assert.Equal("test@example.com", user.Email);
         Assert.Equal("hash123", user.PasswordHash);
         Assert.Equal("Test User", user.Name);
@@ -37,14 +36,13 @@ public class UserTests
     [Fact]
     public void Hydrate_ShouldReconstructUser()
     {
-        var id = UserId.New();
         var now = DateTime.UtcNow;
 
         var user = User.Hydrate(
-            id, "test@test.com", "hash", "Name",
+            123, "test@test.com", "hash", "Name",
             "refresh", now.AddDays(1), now, now);
 
-        Assert.Equal(id, user.Id);
+        Assert.Equal(123, user.Id);
         Assert.Equal("test@test.com", user.Email);
         Assert.Equal("hash", user.PasswordHash);
         Assert.Equal("Name", user.Name);

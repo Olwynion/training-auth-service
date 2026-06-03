@@ -1,13 +1,11 @@
-using Training.Auth.Domain.ValueObjects;
-
 namespace Training.Auth.Domain.Entities;
 
 public class User
 {
-    public UserId Id { get; private set; }
-    public string Email { get; private set; }
-    public string PasswordHash { get; private set; }
-    public string Name { get; private set; }
+    public long Id { get; private set; }
+    public string Email { get; private set; } = null!;
+    public string PasswordHash { get; private set; } = null!;
+    public string Name { get; private set; } = null!;
     public string? RefreshToken { get; private set; }
     public DateTime? RefreshTokenExpiresAt { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -19,7 +17,6 @@ public class User
     {
         return new User
         {
-            Id = UserId.New(),
             Email = email.ToLowerInvariant().Trim(),
             PasswordHash = passwordHash,
             Name = name,
@@ -29,7 +26,7 @@ public class User
     }
 
     public static User Hydrate(
-        UserId id, string email, string passwordHash, string name,
+        long id, string email, string passwordHash, string name,
         string? refreshToken, DateTime? refreshTokenExpiresAt,
         DateTime createdAt, DateTime updatedAt)
     {
@@ -44,6 +41,11 @@ public class User
             CreatedAt = createdAt,
             UpdatedAt = updatedAt
         };
+    }
+
+    public void SetId(long id)
+    {
+        Id = id;
     }
 
     public void SetRefreshToken(string refreshToken, DateTime expiresAt)

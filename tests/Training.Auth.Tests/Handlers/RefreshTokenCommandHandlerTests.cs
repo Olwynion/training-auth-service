@@ -18,7 +18,7 @@ public class RefreshTokenCommandHandlerTests
         _tokenService = new Mock<IAuthTokenService>();
         _handler = new RefreshTokenCommandHandler(_userRepo.Object, _tokenService.Object);
 
-        _tokenService.Setup(t => t.GenerateAccessToken(It.IsAny<string>(), It.IsAny<string>()))
+        _tokenService.Setup(t => t.GenerateAccessToken(It.IsAny<long>(), It.IsAny<string>()))
             .Returns(("new-access-token", DateTime.UtcNow.AddHours(1)));
         _tokenService.Setup(t => t.GenerateRefreshToken())
             .Returns(("new-refresh-token", DateTime.UtcNow.AddDays(7)));

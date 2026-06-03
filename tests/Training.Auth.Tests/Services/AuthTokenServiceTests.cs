@@ -24,7 +24,7 @@ public class AuthTokenServiceTests
     [Fact]
     public void GenerateAccessToken_ShouldReturnTokenAndExpiry()
     {
-        var (token, expiresAt) = _service.GenerateAccessToken("user-1", "test@test.com");
+        var (token, expiresAt) = _service.GenerateAccessToken(1, "test@test.com");
 
         Assert.NotNull(token);
         Assert.NotEmpty(token);
@@ -46,13 +46,13 @@ public class AuthTokenServiceTests
     [Fact]
     public void ValidateAccessToken_ValidToken_ShouldReturnValid()
     {
-        var (token, _) = _service.GenerateAccessToken("user-1", "test@test.com");
+        var (token, _) = _service.GenerateAccessToken(1, "test@test.com");
 
         var (isValid, isExpired, userId, email) = _service.ValidateAccessToken(token);
 
         Assert.True(isValid);
         Assert.False(isExpired);
-        Assert.Equal("user-1", userId);
+        Assert.Equal(1, userId);
         Assert.Equal("test@test.com", email);
     }
 
@@ -63,7 +63,7 @@ public class AuthTokenServiceTests
 
         Assert.False(isValid);
         Assert.False(isExpired);
-        Assert.Empty(userId);
+        Assert.Equal(0, userId);
         Assert.Empty(email);
     }
 

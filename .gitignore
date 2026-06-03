@@ -10,3 +10,4 @@ Thumbs.db
 # Local development
 appsettings.Local.json
 pgdata/
+goose.exe

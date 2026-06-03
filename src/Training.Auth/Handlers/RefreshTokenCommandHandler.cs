@@ -14,8 +14,7 @@ public class RefreshTokenCommandHandler(
         if (user == null || !user.IsRefreshTokenValid(request.RefreshToken))
             throw new UnauthorizedAccessException("Invalid or expired refresh token");
 
-        var (accessToken, expiresAt) = tokenService.GenerateAccessToken(
-            user.Id.Value.ToString(), user.Email);
+        var (accessToken, expiresAt) = tokenService.GenerateAccessToken(user.Id, user.Email);
         var (refreshToken, _) = tokenService.GenerateRefreshToken();
 
         user.SetRefreshToken(refreshToken, expiresAt);
@@ -23,7 +22,7 @@ public class RefreshTokenCommandHandler(
 
         return new AuthResult(
             accessToken, refreshToken,
-            user.Id.Value.ToString(), user.Email, user.Name,
+            user.Id, user.Email, user.Name,
             ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
     }
 }

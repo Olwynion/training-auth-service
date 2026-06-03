@@ -1,3 +1,4 @@
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
 using Training.Auth.Services.Users.Commands;
@@ -48,6 +49,12 @@ public class AuthGrpcService(IMediator mediator) : AuthServiceBase
             context.CancellationToken);
 
         return ToAuthResponse(result);
+    }
+
+    public override async Task<Empty> Logout(Training.Common.IdRequest request, ServerCallContext context)
+    {
+        await mediator.Send(new LogoutCommand(request.Id), context.CancellationToken);
+        return new Empty();
     }
 
     private static AuthResponse ToAuthResponse(Training.Auth.Services.Users.DTOs.AuthResult result)

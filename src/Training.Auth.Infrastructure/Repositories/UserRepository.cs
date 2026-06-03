@@ -1,7 +1,7 @@
 using Dapper;
 using Training.Auth.Domain.Entities;
 using Training.Auth.Domain.Repositories;
-using Training.Auth.Domain.ValueObjects;
+using Training.Auth.Infrastructure.Factories;
 
 namespace Training.Auth.Infrastructure.Repositories;
 
@@ -14,13 +14,13 @@ public class UserRepository : IUserRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         using var conn = _connectionFactory.CreateConnection();
         var row = await conn.QuerySingleOrDefaultAsync<dynamic>(
             new CommandDefinition(
                 commandText: "SELECT * FROM users WHERE id = @Id",
-                parameters: new { Id = id.Value },
+                parameters: new { Id = id },
                 cancellationToken: cancellationToken));
 
         return row != null ? MapToUser(row) : null;
@@ -50,17 +50,17 @@ public class UserRepository : IUserRepository
         return row != null ? MapToUser(row) : null;
     }
 
-    public async Task AddAsync(User user, CancellationToken cancellationToken = default)
+    public async Task<long> AddAsync(User user, CancellationToken cancellationToken = default)
     {
         using var conn = _connectionFactory.CreateConnection();
-        await conn.ExecuteAsync(
+        var id = await conn.QuerySingleAsync<long>(
             new CommandDefinition(
                 commandText: @"
-                    INSERT INTO users (id, email, password_hash, name, refresh_token, refresh_token_expires_at, created_at, updated_at)
-                    VALUES (@Id, @Email, @PasswordHash, @Name, @RefreshToken, @RefreshTokenExpiresAt, @CreatedAt, @UpdatedAt)",
+                    INSERT INTO users (email, password_hash, name, refresh_token, refresh_token_expires_at, created_at, updated_at)
+                    VALUES (@Email, @PasswordHash, @Name, @RefreshToken, @RefreshTokenExpiresAt, @CreatedAt, @UpdatedAt)
+                    RETURNING id",
                 parameters: new
                 {
-                    Id = user.Id.Value,
                     user.Email,
                     user.PasswordHash,
                     user.Name,
@@ -70,6 +70,8 @@ public class UserRepository : IUserRepository
                     user.UpdatedAt
                 },
                 cancellationToken: cancellationToken));
+
+        return id;
     }
 
     public void Update(User user)
@@ -83,13 +85,12 @@ public class UserRepository : IUserRepository
             WHERE id = @Id",
             new
             {
-                Id = user.Id.Value,
+                Id = user.Id,
                 user.Email,
                 user.PasswordHash,
                 user.Name,
                 user.RefreshToken,
                 user.RefreshTokenExpiresAt,
-                user.CreatedAt,
                 user.UpdatedAt
             });
     }
@@ -97,7 +98,7 @@ public class UserRepository : IUserRepository
     private static User MapToUser(dynamic row)
     {
         return User.Hydrate(
-            UserId.From(((Guid)row.id).ToString()),
+            (long)row.id,
             (string)row.email,
             (string)row.password_hash,
             (string)row.name,

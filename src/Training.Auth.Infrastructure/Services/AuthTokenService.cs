@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Training.Auth.Services.Common;
+using Training.Auth.Domain.Services;
 
 namespace Training.Auth.Infrastructure.Services;
 
@@ -25,7 +25,7 @@ public class AuthTokenService : IAuthTokenService
         _settings = settings.Value;
     }
 
-    public (string token, DateTime expiresAt) GenerateAccessToken(string userId, string email)
+    public (string token, DateTime expiresAt) GenerateAccessToken(long userId, string email)
     {
         var expiresAt = DateTime.UtcNow.AddMinutes(_settings.AccessTokenExpirationMinutes);
         var key = new SymmetricSecurityKey(
@@ -33,7 +33,7 @@ public class AuthTokenService : IAuthTokenService
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId),
+            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
@@ -57,14 +57,14 @@ public class AuthTokenService : IAuthTokenService
         return (Convert.ToBase64String(randomBytes), DateTime.UtcNow.AddDays(_settings.RefreshTokenExpirationDays));
     }
 
-    public (bool isValid, bool isExpired, string userId, string email) ValidateAccessToken(string token)
+    public (bool isValid, bool isExpired, long userId, string email) ValidateAccessToken(string token)
     {
         try
         {
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadJwtToken(token);
 
-            var userId = jsonToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value ?? "";
+            var userId = jsonToken.Claims.FirstOrDefault(c => c.Type == "sub")?.Value ?? "0";
             var email = jsonToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value ?? "";
 
             var expClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == "exp")?.Value;
@@ -72,14 +72,14 @@ public class AuthTokenService : IAuthTokenService
             {
                 var expDate = DateTimeOffset.FromUnixTimeSeconds(expUnix);
                 if (expDate < DateTimeOffset.UtcNow)
-                    return (false, true, userId, email);
+                    return (false, true, long.Parse(userId), email);
             }
 
-            return (true, false, userId, email);
+            return (true, false, long.Parse(userId), email);
         }
         catch
         {
-            return (false, false, "", "");
+            return (false, false, 0, "");
         }
     }
 }

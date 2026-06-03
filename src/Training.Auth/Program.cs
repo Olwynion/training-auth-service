@@ -1,15 +1,27 @@
-using Training.Auth.Infrastructure;
-using Training.Auth.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Training.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddGrpc();
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+AppContext.SetSwitch("Microsoft.AspNetCore.Server.Kestrel.Experimental.DisableHttp2Tls", true);
+
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1;
+    });
+    options.ListenAnyIP(5002, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+    });
+});
+
+var startup = new Startup(builder.Configuration);
+startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
-
-app.MapGrpcService<AuthGrpcService>();
-app.MapGet("/health", () => "OK");
-
+startup.Configure(app);
 app.Run();

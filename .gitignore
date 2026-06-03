@@ -6,3 +6,8 @@ obj/
 *.suo
 .DS_Store
 Thumbs.db
+
+# Local development
+appsettings.Local.json
+pgdata/
+goose.exe
